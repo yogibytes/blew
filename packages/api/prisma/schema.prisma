@@ -1,0 +1,114 @@
+// This is your Prisma schema file.
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// MERCHANT: Who receives payments
+model Merchant {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String
+  walletAddress   String    @unique
+  apiKey          String    @unique
+  
+  webhookUrl      String?
+  webhookSecret   String?
+  
+  status          String    @default("active")  // active, inactive, suspended
+  totalVolume     Decimal   @db.Decimal(20, 8) @default(0)
+  transactionCount Int      @default(0)
+  
+  payments        Payment[]
+  webhookLogs     WebhookLog[]
+  apiKeys         ApiKey[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([apiKey])
+  @@index([email])
+}
+
+// PAYMENT: Payment transactions
+model Payment {
+  id              String    @id @default(cuid())
+  
+  merchantId      String
+  merchant        Merchant  @relation(fields: [merchantId], references: [id])
+  
+  amount          Decimal   @db.Decimal(20, 8)
+  token           String    @default("SOL")
+  currency        String    @default("USD")
+  
+  solanaSignature String?   @unique
+  customerWallet  String?
+  
+  status          String    @default("pending")  // pending, confirmed, failed, expired
+  
+  metadata        Json?
+  
+  expiresAt       DateTime
+  createdAt       DateTime  @default(now())
+  confirmedAt     DateTime?
+  
+  webhookLogs     WebhookLog[]
+
+  @@index([merchantId])
+  @@index([status])
+  @@index([solanaSignature])
+  @@index([createdAt])
+  @@index([expiresAt])
+}
+
+// WEBHOOK_LOG: Track notification delivery
+model WebhookLog {
+  id              String    @id @default(cuid())
+  
+  paymentId       String
+  payment         Payment   @relation(fields: [paymentId], references: [id])
+  
+  merchantId      String
+  merchant        Merchant  @relation(fields: [merchantId], references: [id])
+  
+  url             String
+  status          String    @default("pending")  // pending, delivered, failed
+  
+  payload         Json
+  response        String?   @db.Text
+  errorMessage    String?
+  
+  retryCount      Int       @default(0)
+  maxRetries      Int       @default(5)
+  nextRetry       DateTime?
+  
+  createdAt       DateTime  @default(now())
+  lastAttemptAt   DateTime?
+
+  @@index([status])
+  @@index([nextRetry])
+  @@index([merchantId])
+}
+
+// API_KEYS: Multiple keys per merchant
+model ApiKey {
+  id              String    @id @default(cuid())
+  
+  merchantId      String
+  merchant        Merchant  @relation(fields: [merchantId], references: [id])
+  
+  key             String    @unique
+  name            String    @default("API Key")
+  
+  lastUsedAt      DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@index([key])
+  @@index([merchantId])
+}
