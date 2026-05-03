@@ -1,14 +1,25 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": "./../",
     "paths": {
-      "@/*": ["src/*"],
-      "@blew/types": ["../types/src"]
+      "@/*": [
+        "src/*"
+      ],
+      "@blew/types": [
+        "../types/src/index.ts"
+      ]
     },
     "jsx": "preserve",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "outDir": ".next"
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "outDir": ".next",
+    "noEmit": true,
+    "incremental": true
   },
   "include": [
     "src/**/*",
