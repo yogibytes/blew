@@ -47,3 +47,4 @@ prisma/migrations/
 .cache/
 .vercel/
 .vercel
+.env*.local
