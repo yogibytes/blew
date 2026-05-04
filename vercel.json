@@ -5,23 +5,11 @@
   "framework": "nextjs",
   "regions": ["iad1"],
   "env": {
-    "DATABASE_URL": {
-      "description": "Neon PostgreSQL connection string with SSL"
-    },
-    "SOLANA_RPC_URL": {
-      "description": "Solana RPC URL (Helius or public RPC)",
-      "default": "https://api.devnet.solana.com"
-    },
-    "SOLANA_CLUSTER": {
-      "description": "Solana cluster: devnet, testnet, or mainnet-beta",
-      "default": "devnet"
-    },
-    "HELIUS_RPC_URL": {
-      "description": "Helius RPC endpoint (free tier: 10M req/month)"
-    },
-    "CRON_SECRET": {
-      "description": "Secret token for background job endpoint"
-    }
+    "DATABASE_URL": "@database_url",
+    "SOLANA_RPC_URL": "@solana_rpc_url",
+    "SOLANA_CLUSTER": "@solana_cluster",
+    "HELIUS_RPC_URL": "@helius_rpc_url",
+    "CRON_SECRET": "@cron_secret"
   },
   "builds": [
     {
