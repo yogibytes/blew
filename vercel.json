@@ -3,17 +3,5 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
-  "regions": ["iad1"],
-  "builds": [
-    {
-      "src": "packages/api/package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/packages/api/$1"
-    }
-  ]
+  "regions": ["iad1"]
 }
