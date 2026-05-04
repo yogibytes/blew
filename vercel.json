@@ -4,13 +4,6 @@
   "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
   "regions": ["iad1"],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "SOLANA_RPC_URL": "@solana_rpc_url",
-    "SOLANA_CLUSTER": "@solana_cluster",
-    "HELIUS_RPC_URL": "@helius_rpc_url",
-    "CRON_SECRET": "@cron_secret"
-  },
   "builds": [
     {
       "src": "packages/api/package.json",
