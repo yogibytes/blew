@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@/lib/prisma'
-import { withAuth } from '@/middleware/auth'
-import { sendSuccess, sendError } from '@/lib/api-response'
-import { withMethod } from '@/middleware/validation'
+import { prisma } from '../../../lib/prisma'
+import { withAuth } from '../../../middleware/auth'
+import { sendSuccess, sendError } from '../../../lib/api-response'
+import { withMethod } from '../../../middleware/validation'
 
 /**
  * GET /api/payments?limit=10&offset=0&status=pending
@@ -33,7 +33,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     ])
 
     return sendSuccess(res, {
-      payments: payments.map(p => ({
+      payments: payments.map((p: any) => ({
         id: p.id,
         amount: p.amount,
         token: p.token,

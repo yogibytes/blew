@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@/lib/prisma'
-import { generateWebhookSecret } from '@/lib/crypto'
-import { withAuth } from '@/middleware/auth'
-import { sendSuccess, sendError, validateRequired } from '@/lib/api-response'
-import { withMethod, ensureBodyJson } from '@/middleware/validation'
+import { prisma } from '../../../lib/prisma'
+import { generateWebhookSecret } from '../../../lib/crypto'
+import { withAuth } from '../../../middleware/auth'
+import { sendSuccess, sendError, validateRequired } from '../../../lib/api-response'
+import { withMethod, ensureBodyJson } from '../../../middleware/validation'
 
 /**
  * PUT /api/merchants/update

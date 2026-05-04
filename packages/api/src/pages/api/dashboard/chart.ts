@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@/lib/prisma'
-import { withAuth } from '@/middleware/auth'
-import { sendSuccess, sendError } from '@/lib/api-response'
-import { withMethod } from '@/middleware/validation'
+import { prisma } from '../../../lib/prisma'
+import { withAuth } from '../../../middleware/auth'
+import { sendSuccess, sendError } from '../../../lib/api-response'
+import { withMethod } from '../../../middleware/validation'
+import type { Payment } from '@prisma/client'
 
 /**
  * GET /api/dashboard/chart?range=7days
@@ -52,7 +53,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Aggregate payments by date
-    payments.forEach(payment => {
+    payments.forEach((payment: Payment) => {
       if (payment.confirmedAt) {
         const dateStr = payment.confirmedAt.toISOString().split('T')[0]
         if (chartData[dateStr]) {

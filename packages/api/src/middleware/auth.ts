@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@/lib/prisma'
-import { sendError } from '@/lib/api-response'
+import { prisma } from '../lib/prisma'
+import { sendError } from '../lib/api-response'
 
 /**
  * Middleware to authenticate API requests using API key

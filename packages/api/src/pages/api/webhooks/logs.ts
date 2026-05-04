@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@/lib/prisma'
-import { withAuth } from '@/middleware/auth'
-import { sendSuccess, sendError } from '@/lib/api-response'
-import { withMethod } from '@/middleware/validation'
+import { prisma } from '../../../lib/prisma'
+import { withAuth } from '../../../middleware/auth'
+import { sendSuccess, sendError } from '../../../lib/api-response'
+import { withMethod } from '../../../middleware/validation'
 
 /**
  * GET /api/webhooks/logs?limit=50&offset=0&status=failed
@@ -34,7 +34,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     ])
 
     return sendSuccess(res, {
-      logs: logs.map(log => ({
+      logs: logs.map((log: any) => ({
         id: log.id,
         paymentId: log.paymentId,
         url: log.url,

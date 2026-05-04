@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withAuth } from '@/middleware/auth'
-import { sendSuccess, sendError } from '@/lib/api-response'
-import { withMethod } from '@/middleware/validation'
+import { withAuth } from '../../../middleware/auth'
+import { sendSuccess, sendError } from '../../../lib/api-response'
+import { withMethod } from '../../../middleware/validation'
 
 /**
  * GET /api/merchants/me

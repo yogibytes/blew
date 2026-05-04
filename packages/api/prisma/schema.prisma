@@ -79,6 +79,7 @@ model WebhookLog {
   
   url             String
   status          String    @default("pending")  // pending, delivered, failed
+  signature       String    // HMAC-SHA256 signature of payload
   
   payload         Json
   response        String?   @db.Text

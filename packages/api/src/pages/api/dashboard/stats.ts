@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@/lib/prisma'
-import { withAuth } from '@/middleware/auth'
-import { sendSuccess, sendError } from '@/lib/api-response'
-import { withMethod } from '@/middleware/validation'
+import { prisma } from '../../../lib/prisma'
+import { withAuth } from '../../../middleware/auth'
+import { sendSuccess, sendError } from '../../../lib/api-response'
+import { withMethod } from '../../../middleware/validation'
 
 /**
  * GET /api/dashboard/stats
@@ -19,11 +19,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       where: { merchantId: merchant.id },
     })
 
-    const confirmedPayments = allPayments.filter(p => p.status === 'confirmed')
-    const pendingPayments = allPayments.filter(p => p.status === 'pending')
-    const failedPayments = allPayments.filter(p => p.status === 'failed')
+    const confirmedPayments = allPayments.filter((p: any) => p.status === 'confirmed')
+    const pendingPayments = allPayments.filter((p: any) => p.status === 'pending')
+    const failedPayments = allPayments.filter((p: any) => p.status === 'failed')
 
-    const totalVolume = confirmedPayments.reduce((sum, p) => sum + parseFloat(p.amount.toString()), 0)
+    const totalVolume = confirmedPayments.reduce((sum: number, p: any) => sum + parseFloat(p.amount.toString()), 0)
     const totalTransactions = confirmedPayments.length
     const averageTransaction = totalTransactions > 0 ? totalVolume / totalTransactions : 0
 

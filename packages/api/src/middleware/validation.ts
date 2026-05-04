@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { sendError } from '@/lib/api-response'
+import { sendError } from '../lib/api-response'
 
 /**
  * Middleware to ensure only allowed HTTP methods
