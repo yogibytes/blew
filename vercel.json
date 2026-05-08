@@ -1,7 +1,6 @@
 {
-  "buildCommand": "pnpm run build",
-  "devCommand": "pnpm run dev",
-  "installCommand": "pnpm install",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
   "framework": "nextjs",
   "regions": ["iad1"],
   "outputDirectory": "packages/api/.next"
