@@ -2,10 +2,11 @@
 
 import React from 'react'
 import { useTheme } from '../context/ThemeContext'
-import { brandName, tagline } from '../styles/theme'
 
 export const Header: React.FC = () => {
   const { theme, toggleTheme, themeConfig } = useTheme()
+  const brandName = 'Blew'
+  const tagline = 'Accept Crypto Payments'
 
   return (
     <header

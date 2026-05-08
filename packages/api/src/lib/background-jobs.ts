@@ -168,7 +168,6 @@ export async function retryFailedWebhooks(): Promise<{
             data: {
               status: 'delivered',
               response: await response.text(),
-              deliveredAt: new Date(),
             },
           })
           result.delivered++
@@ -284,7 +283,6 @@ async function deliverWebhook(
         signature,
         retryCount: response.ok ? 0 : 1,
         nextRetry: response.ok ? null : new Date(Date.now() + 60000), // Retry in 1 minute
-        deliveredAt: response.ok ? new Date() : null,
       },
     })
 

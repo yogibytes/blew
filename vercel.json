@@ -1,8 +1,14 @@
 {
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": "pnpm run build",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install --no-frozen-lockfile",
   "framework": "nextjs",
   "regions": ["iad1"],
-  "outputDirectory": "packages/api/.next"
+  "outputDirectory": "packages/api/.next",
+  "monorepo": true,
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@blew_next_public_api_url",
+    "NEXT_PUBLIC_ENVIRONMENT": "production",
+    "DATABASE_URL": "@database_url"
+  }
 }
