@@ -3,7 +3,7 @@ import { prisma } from '../../../lib/prisma'
 import { withAuth } from '../../../middleware/auth'
 import { sendSuccess, sendError } from '../../../lib/api-response'
 import { withMethod } from '../../../middleware/validation'
-
+import {withCors} from '../../../middleware/cors'
 /**
  * GET /api/payments/[id]
  * Get payment details
@@ -14,8 +14,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const merchant = (req as any).merchant
     const { id } = req.query
-
-    const payment = await prisma.payment.findFirst({
+  
+    const payment = await prisma.payment.findFirst({  
       where: {
         id: id as string,
         merchantId: merchant.id,
@@ -46,4 +46,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export default (req: NextApiRequest, res: NextApiResponse) =>
-  withAuth(req, res, handler)
+withCors(req, res, (req, res) => withAuth(req, res, handler))

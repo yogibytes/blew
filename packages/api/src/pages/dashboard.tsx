@@ -14,7 +14,7 @@ import {
 } from 'recharts'
 import { useTheme } from '../context/ThemeContext'
 import { Header } from '../components/Header'
-import { Card, StatCard, Table, Badge } from '../components/UI'
+import { Card, StatCard, Table, Badge } from '../components/ui'
 
 interface DashboardStats {
   totalVolume: number
@@ -178,8 +178,7 @@ const DashboardContent: React.FC = () => {
           />
           <StatCard
             label="Success Rate"
-            value={`${stats?.successRate.toFixed(1) || 0}%`}
-            icon="✅"
+            value={`${Number(stats?.successRate || 0).toFixed(1)}%`}            icon="✅"
             accentColor="success"
             change={stats ? Math.floor(Math.random() * 20 - 5) : 0}
           />

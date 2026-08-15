@@ -3,12 +3,13 @@ import { prisma } from '../../../../lib/prisma'
 import { withAuth } from '../../../../middleware/auth'
 import { sendSuccess, sendError, validateRequired } from '../../../../lib/api-response'
 import { withMethod, ensureBodyJson } from '../../../../middleware/validation'
+import {withCors} from '../../../../middleware/cors'
 
 /**
  * POST /api/payments/[id]/confirm
  * Confirm payment after transaction signed
  */
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse)  {
   if (!withMethod(req, res, ['POST'])) return
   if (!ensureBodyJson(req, res)) return
 
@@ -73,4 +74,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export default (req: NextApiRequest, res: NextApiResponse) =>
-  withAuth(req, res, handler)
+ withCors(req, res, (req, res) => withAuth(req, res, handler))

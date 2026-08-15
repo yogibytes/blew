@@ -1,5 +1,5 @@
-import { prisma } from '../lib/prisma'
-import { getTransactionStatus } from '../lib/solana'
+import { prisma } from './prisma'
+import { getTransactionStatus } from './solana'
 import crypto from 'crypto'
 
 /**
@@ -79,7 +79,7 @@ export async function monitorPendingTransactions(): Promise<TransactionMonitorRe
           })
 
           result.failed++
-          console.log(`❌ Payment ${payment.id} failed on blockchain`)
+          console.log(` Payment ${payment.id} failed on blockchain`)
 
           // Deliver webhook to merchant
           if (payment.merchant?.webhookUrl) {
@@ -94,7 +94,7 @@ export async function monitorPendingTransactions(): Promise<TransactionMonitorRe
       }
     }
 
-    console.log(`✨ Transaction monitor complete: ${result.confirmed} confirmed, ${result.failed} failed`)
+    console.log(` Transaction monitor complete: ${result.confirmed} confirmed, ${result.failed} failed`)
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error)
     result.errors.push(`Monitor error: ${errorMsg}`)
@@ -287,7 +287,7 @@ async function deliverWebhook(
     })
 
     if (response.ok) {
-      console.log(`✅ Webhook delivered for payment ${payment.id}`)
+      console.log(` Webhook delivered for payment ${payment.id}`)
     } else {
       console.warn(`⚠️ Webhook delivery failed for payment ${payment.id}: ${response.status}`)
     }

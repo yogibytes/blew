@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("postgresql://neondb_owner:npg_RHgxzd6lF0Ir@ep-spring-bar-amxm76to-pooler.c-5.us-east-1.aws.neon.tech/blew?sslmode=require&channel_binding=require")
 }
 
 // MERCHANT: Who receives payments

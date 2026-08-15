@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 
-export const useLocalStorage = <T,>(key: string, initialValue: T): [T, (value: T) => void] => {
+export const useLocalStorage = <T>(key: string, initialValue: T): [T, (value: T) => void] => {
   const [storedValue, setStoredValue] = useState<T>(initialValue)
 
   // Update localStorage and state

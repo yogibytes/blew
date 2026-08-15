@@ -1,3 +1,4 @@
+
 import React from 'react'
 import BlewWidget from './BlewWidget'
 
@@ -36,7 +37,7 @@ export default function WidgetDemo() {
         <h2>Checkout</h2>
         <BlewWidget
           merchantId="merchant_123"
-          amount={0.5}
+          amount={1.5}
           token="SOL"
           apiKey="test_api_key_here"
           apiBase="http://localhost:3000"

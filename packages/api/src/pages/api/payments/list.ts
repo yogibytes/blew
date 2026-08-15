@@ -3,6 +3,7 @@ import { prisma } from '../../../lib/prisma'
 import { withAuth } from '../../../middleware/auth'
 import { sendSuccess, sendError } from '../../../lib/api-response'
 import { withMethod } from '../../../middleware/validation'
+import {withCors} from '../../../middleware/cors'
 
 /**
  * GET /api/payments?limit=10&offset=0&status=pending
@@ -55,4 +56,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export default (req: NextApiRequest, res: NextApiResponse) =>
-  withAuth(req, res, handler)
+withCors(req, res, (req, res) => withAuth(req, res, handler))

@@ -1,7 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": "./",
+    "rootDir": "./src",
     "paths": {
       "@/*": ["src/*"],
       "@blew/types": ["../types/src/index.ts"]
@@ -9,7 +11,7 @@
     "jsx": "react-jsx",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "declaration": true,
-    "declarationDir": "dist",
+    "declarationDir": "./types",
     "emitDeclarationOnly": false
   },
   "include": [

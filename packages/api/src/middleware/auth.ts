@@ -13,7 +13,6 @@ export async function withAuth(
 ) {
   try {
     const apiKey = req.headers['x-api-key'] as string
-
     if (!apiKey) {
       return sendError(
         res,
@@ -37,7 +36,7 @@ export async function withAuth(
     }
 
     // Attach merchant to request
-    ;(req as any).merchant = merchant
+    (req as any).merchant = merchant;
 
     // Call the actual handler
     return handler(req, res)

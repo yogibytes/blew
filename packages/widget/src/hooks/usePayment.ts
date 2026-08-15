@@ -35,13 +35,13 @@ export const usePayment = (apiKey?: string): UsePaymentReturn => {
         }
 
         // Determine API base URL (default to localhost for dev, can be overridden)
-        const apiBase = localStorage.getItem('blew-api-base') || 'http://localhost:3000'
+        // const apiBase = localStorage.getItem('blew-api-base') || 'http://localhost:3000'
 
-        const response = await fetch(`${apiBase}/api/payments`, {
+        const response = await fetch("http://localhost:3000/api/payment", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-API-Key': key,
+            'X-API-Key': key, 
           },
           body: JSON.stringify({
             merchantId,
