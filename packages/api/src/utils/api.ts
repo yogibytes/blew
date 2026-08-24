@@ -1,6 +1,6 @@
 // API wrapper configuration and utilities
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://blew-ten.vercel.app'  || 'http:localhost:3000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://blew-ten.vercel.app' 
 
 interface FetchOptions extends RequestInit {
   headers?: Record<string, string>

@@ -1,12 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "declaration": true,
     "declarationMap": true,
-    "outDir": "dist",
+    "outDir": "./src",
     "lib": ["ES2020"]
-  },
+  },"compilerOption" :"ignoreDeprecations",
   "include": [
     "src/**/*"
   ],
