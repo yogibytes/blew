@@ -19,7 +19,7 @@ export default function WidgetDemo() {
     // Handle success - could redirect to order confirmation page
     alert(`Payment of ${data.amount} ${data.token} confirmed!\nPayment ID: ${data.paymentId}`)
   }
-
+console.log()
   const handlePaymentError = (error: Error) => {
     console.error('❌ Payment failed:', error)
     // Handle error - show to user or retry logic
@@ -39,8 +39,8 @@ export default function WidgetDemo() {
           merchantId="merchant_123"
           amount={1.5}
           token="SOL"
-          apiKey="test_api_key_here"
-          apiBase="http://localhost:3000"
+          apiKey="blew_883145bd9bb9a6ff41426a46a0f40ae4441afdcb2b00de3d924d905ec6d1af86"
+          apiBase="http://localhost:3000/"
           darkMode={true}
           metadata={{
             orderId: 'order_456',

@@ -60,6 +60,7 @@ export const BlewWidget: React.FC<BlewWidgetProps> = ({
       
       if (confirmed) {
         setState('confirmed')
+        
         if (onSuccess) {
           onSuccess({
             paymentId: newPaymentId,

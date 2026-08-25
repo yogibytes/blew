@@ -40,7 +40,8 @@ export const useWallet = (): UseWalletReturn => {
 
         // Try to connect if previously connected
         const response = await phantomWindow.solana.connect({ onlyIfTrusted: true })
-        setPublicKey(response.publicKey.toString())
+        const publicKeyObtained = response.publicKey.toString();
+        setPublicKey(publicKeyObtained)
         setConnected(true)
       } catch (err) {
         // Not connected yet, which is fine
@@ -110,6 +111,6 @@ export const useWallet = (): UseWalletReturn => {
       throw error
     }
   }, [])
-
+  console.log(publicKey );
   return { connected, publicKey, connecting, error, connect, disconnect }
 }

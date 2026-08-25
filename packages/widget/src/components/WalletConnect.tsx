@@ -8,7 +8,7 @@ interface WalletConnectProps {
 
 export const WalletConnect: React.FC<WalletConnectProps> = ({ onConnected, darkMode = false }) => {
   const { connected, publicKey, connecting, error, connect } = useWallet()
-
+    console.log({publicKey})
   React.useEffect(() => {
     if (connected && publicKey && onConnected) {
       onConnected(publicKey)

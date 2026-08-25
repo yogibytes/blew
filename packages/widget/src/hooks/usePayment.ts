@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-
+import {useWallet} from './useWallet'
 export interface PaymentRequest {
   id: string
   amount: number
@@ -9,7 +9,6 @@ export interface PaymentRequest {
   expiresAt: string
   metadata?: Record<string, any>
 }
-
 export interface UsePaymentReturn {
   payment: PaymentRequest | null
   loading: boolean
@@ -18,33 +17,41 @@ export interface UsePaymentReturn {
 }
 
 export const usePayment = (apiKey?: string): UsePaymentReturn => {
+  const { publicKey } = useWallet();
   const [payment, setPayment] = useState<PaymentRequest | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
-
+  
   const createPayment = useCallback(
     async (merchantId: string, amount: number, token: string, metadata?: Record<string, any>) => {
       try {
         setLoading(true)
         setError(null)
-
+        console.log(publicKey);
         // Use provided API key or get from localStorage
         const key = apiKey || localStorage.getItem('blew-api-key')
         if (!key) {
           throw new Error('No API key provided. Please configure your API key.')
         }
 
+        if (!publicKey) {
+        throw new Error("Wallet is not connected")
+      }
+
         // Determine API base URL (default to localhost for dev, can be overridden)
         // const apiBase = localStorage.getItem('blew-api-base') || 'http://localhost:3000'
-
-        const response = await fetch("http://localhost:3000/api/payment", {
+        const userWalletAddress = publicKey
+        const api = key;
+        const response = await fetch("/api/payment", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-API-Key': key, 
+            // 'X-API-Key': key, 
           },
           body: JSON.stringify({
             merchantId,
+            api,
+            userWalletAddress,
             amount,
             token,
             metadata,
