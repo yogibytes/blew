@@ -110,7 +110,7 @@ export const useWallet = (): UseWalletReturn => {
       setError(error)
       throw error
     }
-  }, [])
+  }, [publicKey])
   console.log(publicKey );
   return { connected, publicKey, connecting, error, connect, disconnect }
 }

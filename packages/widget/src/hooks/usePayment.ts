@@ -17,7 +17,7 @@ export interface UsePaymentReturn {
 }
 
 export const usePayment = (apiKey?: string): UsePaymentReturn => {
-  const { publicKey } = useWallet();
+  const publicKey  = useWallet();
   const [payment, setPayment] = useState<PaymentRequest | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -27,7 +27,8 @@ export const usePayment = (apiKey?: string): UsePaymentReturn => {
       try {
         setLoading(true)
         setError(null)
-        console.log(publicKey);
+        console.log(publicKey ,"type is :" +  typeof(publicKey));
+        
         // Use provided API key or get from localStorage
         const key = apiKey || localStorage.getItem('blew-api-key')
         if (!key) {
