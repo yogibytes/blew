@@ -17,16 +17,21 @@ import { prisma } from '../../../lib/prisma';
 export async function POST(request:NextRequest) {
   try {
     const body = await request.json();
-    const merchantXAPI = request.headers.get('x-api-key');
-    const { userWalletAddress, amount, token, metadata: { orderId, productName } } = body;
+    const { merchantAPI, userWalletAddress, amount, token, metadata: { orderId, productName } } = body;
+    const merchant = await prisma.merchant.findUnique({
+      where:
+        { apiKey:  merchantAPI  }
+    })
+
+    const merchantWalletAddress = merchant?.walletAddress;
+    console.log("merchant wallet add is: " , merchantWalletAddress)
+
     
-
-
 
     return NextResponse.json({
       msg: "success",
       body: body,
-      "x-api-key":merchantXAPI,
+      // "x-api-key":merchantXAPI,
       status: 200,
     }
       ) 
