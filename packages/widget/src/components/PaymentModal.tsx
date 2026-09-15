@@ -12,7 +12,6 @@ interface PaymentModalProps {
   apiKey?: string
   metadata?: Record<string, any>
 }
-
 export const PaymentModal: React.FC<PaymentModalProps> = ({
   merchantId,
   amount,

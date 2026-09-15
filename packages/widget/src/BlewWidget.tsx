@@ -42,6 +42,7 @@ export const BlewWidget: React.FC<BlewWidgetProps> = ({
 
   // Store API key and base in localStorage if provided
   useEffect(() => {
+    console.log(`signature is ${signature}`);
     if (apiKey) {
       localStorage.setItem('blew-api-key', apiKey)
     }

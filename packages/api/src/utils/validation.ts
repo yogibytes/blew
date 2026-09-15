@@ -14,7 +14,10 @@ export const validators = {
 
   isValidApiKey(apiKey: string): boolean {
     // Simple validation: non-empty string
-    return apiKey && apiKey.length > 0
+    if ((apiKey && apiKey.length > 0)) {
+      return true;
+    }
+    return false;
   },
 
   isValidAmount(amount: string | number): boolean {

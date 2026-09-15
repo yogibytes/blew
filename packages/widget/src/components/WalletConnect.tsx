@@ -1,5 +1,5 @@
 import React from 'react'
-import { useWallet } from '../hooks/useWallet'
+import { useWallets } from '../hooks/useWallet'
 
 interface WalletConnectProps {
   onConnected?: (publicKey: string) => void
@@ -7,8 +7,8 @@ interface WalletConnectProps {
 }
 
 export const WalletConnect: React.FC<WalletConnectProps> = ({ onConnected, darkMode = false }) => {
-  const { connected, publicKey, connecting, error, connect } = useWallet()
-    console.log({publicKey})
+  const { connected, publicKey, connecting, error, connect } = useWallets()
+    // console.log({publicKey})
   React.useEffect(() => {
     if (connected && publicKey && onConnected) {
       onConnected(publicKey)

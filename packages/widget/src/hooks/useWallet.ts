@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-
 export interface PhantomWindow extends Window {
   solana?: {
     isPhantom?: boolean
@@ -22,7 +21,7 @@ export interface UseWalletReturn {
   disconnect: () => Promise<void>
 }
 
-export const useWallet = (): UseWalletReturn => {
+export const useWallets = (): UseWalletReturn => {
   const [connected, setConnected] = useState(false)
   const [publicKey, setPublicKey] = useState<string | null>(null)
   const [connecting, setConnecting] = useState(false)
@@ -111,6 +110,6 @@ export const useWallet = (): UseWalletReturn => {
       throw error
     }
   }, [publicKey])
-  console.log(publicKey );
+  // console.log(publicKey );
   return { connected, publicKey, connecting, error, connect, disconnect }
 }

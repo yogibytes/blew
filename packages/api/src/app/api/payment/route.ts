@@ -1,41 +1,33 @@
 import { NextRequest,NextResponse } from 'next/server';
 import { prisma } from '../../../lib/prisma';
 
-/*
-  {
-    "merchantAPI":"blew_883145bd9bb9a6ff41426a46a0f40ae4441afdcb2b00de3d924d905ec6d1af86",
-    "userWalletAddress":"3HcFa4NofPAb3oReuj2PVxqYpzKKt9yVpg3KDkTHCkdENGEzZXpfXKtuyf5yoaP3efJeKiJB4QzuF1jc6jmhRtuv",
-    "amount":0.5,
-    "token":"SOL",
-    "metadata":
-    {"orderId":"order_456",
-    "productName":"Example Product"
-    }
-}  
-
-*/
 export async function POST(request:NextRequest) {
   try {
     const body = await request.json();
-    const { merchantAPI, userWalletAddress, amount, token, metadata: { orderId, productName } } = body;
+    const { merchantID ,api , userWalletAddress, amount, token,metadata } = body;
+    const { orderId, ProductName } = metadata ?? {};
+
     const merchant = await prisma.merchant.findUnique({
       where:
-        { apiKey:  merchantAPI  }
+        { apiKey: api },
+      select:
+        { walletAddress: true }
     })
-
-    const merchantWalletAddress = merchant?.walletAddress;
-    console.log("merchant wallet add is: " , merchantWalletAddress)
-
+    if (!merchant) {
+     return NextResponse.json({ msg: "error", error: "Merchant not found" }, { status: 404 })
+    }
     
-
+    const merchantWalletAddress = merchant?.walletAddress;
     return NextResponse.json({
       msg: "success",
-      body: body,
-      // "x-api-key":merchantXAPI,
+      response: {
+        merchantwallet: merchantWalletAddress
+      },
       status: 200,
-    }
-      ) 
-  } catch(error) {
+    })
+    
+    } catch(error) {
+    console.log("error is ",error);
     return NextResponse.json(
       {
         msg: "error",
@@ -45,5 +37,9 @@ export async function POST(request:NextRequest) {
         status: 500,
       })
   }
+}
+
+export async function GET(reqest: NextRequest, response: NextResponse) {
+  
 }
 
