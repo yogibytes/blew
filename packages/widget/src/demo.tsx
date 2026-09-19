@@ -1,6 +1,7 @@
 
 import React from 'react'
 import BlewWidget from './BlewWidget'
+import { BlewWalletProvider } from './WalletProvider'
 
 /**
  * Example usage of the Blew Payment Widget
@@ -27,6 +28,7 @@ console.log()
   }
 
   return (
+    <BlewWalletProvider>
     <div style={{ padding: '40px', maxWidth: '600px', margin: '0 auto' }}>
       <h1>🌬️ Blew Payment Widget Demo</h1>
       <p>
@@ -76,5 +78,6 @@ console.log()
         </ul>
       </div>
     </div>
+    </BlewWalletProvider>
   )
 }

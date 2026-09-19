@@ -1,5 +1,6 @@
 import React from 'react'
-import { useWallets } from '../hooks/useWallet'
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 interface WalletConnectProps {
   onConnected?: (publicKey: string) => void
@@ -7,21 +8,13 @@ interface WalletConnectProps {
 }
 
 export const WalletConnect: React.FC<WalletConnectProps> = ({ onConnected, darkMode = false }) => {
-  const { connected, publicKey, connecting, error, connect } = useWallets()
-    // console.log({publicKey})
+  const { connected, publicKey } = useWallet()
+
   React.useEffect(() => {
     if (connected && publicKey && onConnected) {
-      onConnected(publicKey)
+      onConnected(publicKey.toBase58())
     }
   }, [connected, publicKey, onConnected])
-
-  const handleConnect = async () => {
-    try {
-      await connect()
-    } catch (err) {
-      console.error('Connection error:', err)
-    }
-  }
 
   if (connected && publicKey) {
     return (
@@ -35,44 +28,14 @@ export const WalletConnect: React.FC<WalletConnectProps> = ({ onConnected, darkM
           fontWeight: '500',
         }}
       >
-        ✓ {publicKey.slice(0, 8)}...{publicKey.slice(-8)}
+          ✓ {publicKey.toBase58().slice(0, 8)}...{publicKey.toBase58().slice(-8)}
       </div>
     )
   }
 
   return (
     <div>
-      <button
-        onClick={handleConnect}
-        disabled={connecting}
-        style={{
-          backgroundColor: '#14F195',
-          color: '#000000',
-          border: 'none',
-          padding: '12px 20px',
-          borderRadius: '8px',
-          fontSize: '16px',
-          fontWeight: '600',
-          cursor: connecting ? 'not-allowed' : 'pointer',
-          opacity: connecting ? 0.7 : 1,
-          width: '100%',
-          transition: 'opacity 0.2s',
-        }}
-      >
-        {connecting ? 'Connecting...' : 'Connect Phantom Wallet'}
-      </button>
-      {error && (
-        <div
-          style={{
-            color: '#ef4444',
-            fontSize: '12px',
-            marginTop: '8px',
-            textAlign: 'center',
-          }}
-        >
-          {error.message}
-        </div>
-      )}
+      <WalletMultiButton style={{ width: '100%' }} />
     </div>
   )
 }
