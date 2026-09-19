@@ -67,9 +67,9 @@ export const useTransaction = () => {
 
       if (balance < lamports + estimatedFee) {
         throw new Error(
-          `Insufficient Testnet SOL for ${walletAddress} Required ${(lamports + estimatedFee) / LAMPORTS_PER_SOL} SOL, `
+          `Insufficient Devnet SOL for ${walletAddress} Required ${(lamports + estimatedFee) / LAMPORTS_PER_SOL} SOL, `
           + `available ${balance / LAMPORTS_PER_SOL} SOL from ${connection.rpcEndpoint}. `
-          + 'Verify Phantom is using this exact account on Testnet.',
+          + 'Verify Phantom is using this exact account on Devnet.',
         )
       }
 

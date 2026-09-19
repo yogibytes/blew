@@ -14,7 +14,7 @@ export interface BlewWalletProviderProps {
 
 export const BlewWalletProvider: React.FC<BlewWalletProviderProps> = ({
   children,
-  endpoint = clusterApiUrl('testnet'),
+  endpoint = clusterApiUrl('devnet'),
   autoConnect = true,
 }) => {
   const wallets = React.useMemo(() => [new PhantomWalletAdapter()], [])

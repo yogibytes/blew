@@ -1,9 +1,8 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "baseUrl": "./",
-    "rootDir": "./src",
+    "rootDir": "../..",
     "paths": {
       "@/*": ["src/*"],
       "@blew/types": ["../types/src/index.ts"]
