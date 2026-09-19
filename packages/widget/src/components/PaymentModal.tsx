@@ -1,12 +1,13 @@
 import React from 'react'
 import { usePayment } from '../hooks/usePayment'
+import type { PaymentRequest } from '../hooks/usePayment'
 import { WalletConnect } from './WalletConnect'
 
 interface PaymentModalProps {
   merchantId: string
   amount: number
   token: 'SOL' | 'USDC'
-  onPaymentCreated?: (paymentId: string) => void
+  onPaymentCreated?: (payment: PaymentRequest) => void
   onError?: (error: Error) => void
   darkMode?: boolean
   apiKey?: string
@@ -33,7 +34,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     try {
       const paymentData = await createPayment(merchantId, amount, token, metadata)
       if (onPaymentCreated) {
-        onPaymentCreated(paymentData.id)
+        onPaymentCreated(paymentData)
       }
     } catch (err) {
       if (onError) {

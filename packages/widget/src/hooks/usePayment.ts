@@ -35,7 +35,10 @@ export const usePayment = (apiKey?: string): UsePaymentReturn => {
 
         if (!publicKey) throw new Error('Wallet is not connected')
 
-        const prepareResponse = await fetch('/api/payment', {
+        const apiBase = localStorage.getItem('blew-api-base')?.replace(/\/$/, '') || ''
+        const paymentEndpoint = `${apiBase}/api/payment`
+
+        const prepareResponse = await fetch(paymentEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ merchantId, api: key, amount, token, metadata }),
@@ -43,13 +46,13 @@ export const usePayment = (apiKey?: string): UsePaymentReturn => {
         const prepareData = await prepareResponse.json()
         if (!prepareResponse.ok) throw new Error(prepareData.error || prepareData.message || 'Unable to prepare payment')
 
-        const merchantWalletAddress = prepareData.response?.merchantwallet
-          || prepareData.data?.recipientPublicKey
+        const merchantWalletAddress = prepareData.data?.recipientPublicKey
+          || prepareData.response?.merchantwallet
         if (!merchantWalletAddress) throw new Error('Payment service did not provide a merchant wallet')
 
         const signature = await submitTransaction(merchantWalletAddress, amount)
 
-        const response = await fetch("/api/payment", {
+        const response = await fetch(paymentEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

@@ -39,7 +39,7 @@ export const useTransaction = () => {
         SystemProgram.transfer({
           fromPubkey: publicKey,
           toPubkey: recipient,
-          lamports: amount * LAMPORTS_PER_SOL,
+          lamports: Math.round(amount * LAMPORTS_PER_SOL),
         })
       )
 
@@ -48,11 +48,50 @@ export const useTransaction = () => {
       transaction.lastValidBlockHeight = lastValidBlockHeight
       transaction.feePayer = publicKey
 
-      const sig = await sendTransaction(transaction, connection)
+      const lamports = Math.round(amount * LAMPORTS_PER_SOL)
+      const walletAddress = publicKey.toBase58()
+      const [balance, genesisHash] = await Promise.all([
+        connection.getBalance(publicKey, 'finalized'),
+        connection.getGenesisHash(),
+      ])
+      console.info('[Blew] Solana wallet diagnostics', {
+        walletAddress,
+        rpcEndpoint: connection.rpcEndpoint,
+        genesisHash,
+        balanceLamports: balance,
+        balanceSol: balance / LAMPORTS_PER_SOL,
+        requestedSol: amount,
+      })
+      const fee = await connection.getFeeForMessage(transaction.compileMessage(), 'confirmed')
+      const estimatedFee = fee.value ?? 5000
+
+      if (balance < lamports + estimatedFee) {
+        throw new Error(
+          `Insufficient Testnet SOL for ${walletAddress} Required ${(lamports + estimatedFee) / LAMPORTS_PER_SOL} SOL, `
+          + `available ${balance / LAMPORTS_PER_SOL} SOL from ${connection.rpcEndpoint}. `
+          + 'Verify Phantom is using this exact account on Testnet.',
+        )
+      }
+
+      const simulation = await connection.simulateTransaction(transaction)
+      if (simulation.value.err) {
+        const logs = simulation.value.logs?.filter(Boolean).join(' ')
+        throw new Error(`Transaction preflight failed${logs ? `: ${logs}` : ''}`)
+      }
+
+      const sig = await sendTransaction(transaction, connection, {
+        skipPreflight: false,
+        preflightCommitment: 'confirmed',
+      })
       setSignature(sig)
       return sig
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to submit transaction')
+      const nestedCause = typeof err === 'object' && err !== null && 'cause' in err
+        ? (err as { cause?: unknown }).cause
+        : undefined
+      const cause = nestedCause instanceof Error ? `: ${nestedCause.message}` : ''
+      const message = err instanceof Error ? `${err.message}${cause}` : String(err)
+      const error = new Error(message || 'Failed to submit transaction')
       setError(error)
       throw error
     }
