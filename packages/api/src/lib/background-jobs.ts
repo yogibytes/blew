@@ -1,5 +1,6 @@
 import { prisma } from './prisma'
-import { getTransactionStatus } from './solana'
+import { getTransactionStatus, validateTransactionRecipient } from './solana'
+import { LAMPORTS_PER_SOL } from '@solana/web3.js'
 import crypto from 'crypto'
 
 /**
@@ -52,7 +53,14 @@ export async function monitorPendingTransactions(): Promise<TransactionMonitorRe
         // Check transaction status on Solana
         const txStatus = await getTransactionStatus(payment.solanaSignature)
 
-        if (txStatus === 'confirmed') {
+        const validTransfer = await validateTransactionRecipient(
+          payment.solanaSignature,
+          payment.merchant.walletAddress,
+          payment.customerWallet || undefined,
+          Math.round(Number(payment.amount) * LAMPORTS_PER_SOL),
+        )
+
+        if (txStatus === 'confirmed' && validTransfer) {
           // Update payment status
           await prisma.payment.update({
             where: { id: payment.id },
@@ -69,6 +77,12 @@ export async function monitorPendingTransactions(): Promise<TransactionMonitorRe
           if (payment.merchant?.webhookUrl) {
             await deliverWebhook(payment, 'confirmed')
           }
+        } else if (txStatus === 'confirmed' && !validTransfer) {
+          await prisma.payment.update({
+            where: { id: payment.id },
+            data: { status: 'failed' },
+          })
+          result.failed++
         } else if (txStatus === 'failed') {
           // Update payment status
           await prisma.payment.update({
