@@ -2,14 +2,18 @@ import { Connection, clusterApiUrl  , PublicKey } from '@solana/web3.js'
 
 // Use Helius as primary RPC (free tier: 10M req/month)
 // Fallback to public RPC if needed
-const HELIUS_RPC = process.env.HELIUS_RPC_URL || clusterApiUrl('devnet')
+const configuredCluster = process.env.SOLANA_CLUSTER
+const defaultRpc = configuredCluster === 'mainnet-beta' || configuredCluster === 'devnet' || configuredCluster === 'testnet'
+  ? clusterApiUrl(configuredCluster)
+  : clusterApiUrl('devnet')
+const HELIUS_RPC = process.env.HELIUS_RPC_URL || defaultRpc
 const COMMITMENT = 'finalized' // Use finalized for confirmed transactions
 
 let connection: Connection | null = null
 
 /**
  * Get or create Solana connection
- * Uses devnet for MVP, configurable via SOLANA_CLUSTER env var
+ * Uses devnet by default, configurable via SOLANA_CLUSTER or SOLANA_RPC_URL
  */
 export function getConnection(): Connection {
   if (!connection) {
@@ -96,7 +100,9 @@ export async function pollTransactionConfirmation(
  */
 export async function validateTransactionRecipient(
   signature: string,
-  expectedRecipient: string
+  expectedRecipient: string,
+  expectedSender?: string,
+  expectedLamports?: number,
 ): Promise<boolean> {
   try {
     const connection = getConnection()
@@ -116,9 +122,22 @@ export async function validateTransactionRecipient(
       return false
     }
 
-    // Verify at least one instruction sends to expected recipient
-    // This is a simplified check; production would need more sophisticated validation
-    return true
+    const expectedRecipientKey = new PublicKey(expectedRecipient).toBase58()
+    const expectedSenderKey = expectedSender ? new PublicKey(expectedSender).toBase58() : undefined
+
+    return instructions.some((instruction) => {
+      if (!('parsed' in instruction) || instruction.program !== 'system') return false
+
+      const parsed = instruction.parsed as {
+        type?: string
+        info?: { source?: string; destination?: string; lamports?: number }
+      }
+      if (parsed.type !== 'transfer' || !parsed.info) return false
+
+      return parsed.info.destination === expectedRecipientKey
+        && (!expectedSenderKey || parsed.info.source === expectedSenderKey)
+        && (expectedLamports === undefined || parsed.info.lamports === expectedLamports)
+    })
   } catch (error) {
     console.error('Error validating transaction recipient:', error)
     return false

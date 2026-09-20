@@ -1,6 +1,7 @@
 
 import React from 'react'
 import BlewWidget from './BlewWidget'
+import { BlewWalletProvider } from './WalletProvider'
 
 /**
  * Example usage of the Blew Payment Widget
@@ -27,6 +28,7 @@ console.log()
   }
 
   return (
+    <BlewWalletProvider>
     <div style={{ padding: '40px', maxWidth: '600px', margin: '0 auto' }}>
       <h1>🌬️ Blew Payment Widget Demo</h1>
       <p>
@@ -37,10 +39,9 @@ console.log()
         <h2>Checkout</h2>
         <BlewWidget
           merchantId="merchant_123"
-          amount={1.5}
+          amount={1}
           token="SOL"
           apiKey="blew_883145bd9bb9a6ff41426a46a0f40ae4441afdcb2b00de3d924d905ec6d1af86"
-          apiBase="http://localhost:3000/"
           darkMode={true}
           metadata={{
             orderId: 'order_456',
@@ -76,5 +77,6 @@ console.log()
         </ul>
       </div>
     </div>
+    </BlewWalletProvider>
   )
 }

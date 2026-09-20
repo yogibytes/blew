@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { PaymentModal, ConfirmationScreen, ErrorScreen } from './components'
 import { useTransaction } from './hooks/useTransaction'
+import type { PaymentRequest } from './hooks/usePayment'
 
 export interface BlewWidgetProps {
   merchantId: string
@@ -37,35 +38,37 @@ export const BlewWidget: React.FC<BlewWidgetProps> = ({
 }) => {
   const [state, setState] = useState<PaymentState>('idle')
   const [paymentId, setPaymentId] = useState<string | null>(null)
+  const [paymentSignature, setPaymentSignature] = useState<string | null>(null)
   const [error, setError] = useState<Error | null>(null)
-  const { signature, confirmed, pollForConfirmation } = useTransaction()
+  const { pollForConfirmation } = useTransaction()
 
   // Store API key and base in localStorage if provided
   useEffect(() => {
-    console.log(`signature is ${signature}`);
     if (apiKey) {
       localStorage.setItem('blew-api-key', apiKey)
     }
     if (apiBase) {
       localStorage.setItem('blew-api-base', apiBase)
+    } else {
+      localStorage.removeItem('blew-api-base')
     }
   }, [apiKey, apiBase])
 
-  const handlePaymentCreated = async (newPaymentId: string) => {
-    setPaymentId(newPaymentId)
+  const handlePaymentCreated = async (payment: PaymentRequest) => {
+    setPaymentId(payment.id)
+    setPaymentSignature(payment.signature)
     setState('confirming')
 
     try {
-      // Poll for confirmation (max 120 attempts = 2 minutes)
-      const confirmed = await pollForConfirmation(newPaymentId, 120)
+      const confirmed = await pollForConfirmation(payment.signature, 120)
       
       if (confirmed) {
         setState('confirmed')
         
         if (onSuccess) {
           onSuccess({
-            paymentId: newPaymentId,
-            signature: signature ?? undefined,
+            paymentId: payment.id,
+            signature: payment.signature,
             amount: parseFloat(amount.toString()),
             token,
           })
@@ -91,12 +94,14 @@ export const BlewWidget: React.FC<BlewWidgetProps> = ({
 
   const handleRetry = () => {
     setPaymentId(null)
+    setPaymentSignature(null)
     setError(null)
     setState('idle')
   }
 
   const handleClose = () => {
     setPaymentId(null)
+    setPaymentSignature(null)
     setError(null)
     setState('idle')
   }
@@ -182,7 +187,7 @@ export const BlewWidget: React.FC<BlewWidgetProps> = ({
         <div style={wrapperStyle}>
           <ConfirmationScreen
             paymentId={paymentId}
-            signature={signature ?? undefined}
+            signature={paymentSignature ?? undefined}
             amount={parseFloat(amount.toString())}
             token={token}
             onClose={handleClose}

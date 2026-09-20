@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { useWallets } from './useWallet'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { useTransaction } from './useTransaction'
 export interface PaymentRequest {
   id: string
@@ -18,8 +18,8 @@ export interface UsePaymentReturn {
   createPayment: (merchantId: string, amount: number, token: string, metadata?: Record<string, any>) => Promise<PaymentRequest>
 }
 export const usePayment = (apiKey?: string): UsePaymentReturn => {
-  const { publicKey } = useWallets()        
-  const { submitTransaction } = useTransaction() 
+  const { publicKey } = useWallet()
+  const { submitTransaction } = useTransaction()
   const [payment, setPayment] = useState<PaymentRequest | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -35,17 +35,30 @@ export const usePayment = (apiKey?: string): UsePaymentReturn => {
 
         if (!publicKey) throw new Error('Wallet is not connected')
 
-      const merchantWalletAddress = "EPjT9JFNCfQRwk3WkaBMSm3S6UiM2Bk1QjD8MgyNXGoY"
-      const signature = await submitTransaction(merchantWalletAddress, amount) 
-        console.log("signature:", signature)
+        const apiBase = localStorage.getItem('blew-api-base')?.replace(/\/$/, '') || ''
+        const paymentEndpoint = `${apiBase}/api/payment`
 
-        const response = await fetch("/api/payment", {
+        const prepareResponse = await fetch(paymentEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ merchantId, api: key, amount, token, metadata }),
+        })
+        const prepareData = await prepareResponse.json()
+        if (!prepareResponse.ok) throw new Error(prepareData.error || prepareData.message || 'Unable to prepare payment')
+
+        const merchantWalletAddress = prepareData.data?.recipientPublicKey
+          || prepareData.response?.merchantwallet
+        if (!merchantWalletAddress) throw new Error('Payment service did not provide a merchant wallet')
+
+        const signature = await submitTransaction(merchantWalletAddress, amount)
+
+        const response = await fetch(paymentEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             merchantId,
             api: key,
-            userWalletAddress: publicKey,
+            userWalletAddress: publicKey.toBase58(),
             amount,
             token,
             metadata,
@@ -65,7 +78,7 @@ export const usePayment = (apiKey?: string): UsePaymentReturn => {
           amount: data.data?.amount || amount,
           token: data.data?.token || token,
           status: data.data?.status || 'pending',
-          recipientPublicKey: data.data?.recipientPublicKey,
+          recipientPublicKey: data.data?.recipientPublicKey || merchantWalletAddress,
           expiresAt: data.data?.expiresAt,
           metadata: data.data?.metadata,
           signature
