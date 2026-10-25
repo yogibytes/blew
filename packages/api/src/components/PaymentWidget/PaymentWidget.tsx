@@ -9,7 +9,7 @@ import { PaymentStatus } from './PaymentStatus'
 import { PaymentSuccess } from './PaymentSuccess'
 import { usePayment } from '@/hooks/usePayment'
 import { showError } from '@/components/Common/Toast'
-import { Payment } from '@/types'
+import { Payment } from '@blew/types'
 
 export type PaymentWidgetState = 'form' | 'status' | 'success' | 'error'
 
@@ -35,7 +35,7 @@ export const PaymentWidget: React.FC<PaymentWidgetProps> = ({
   }
 
   const handleStatusChange = (updatedPayment: Payment) => {
-    if (updatedPayment.status === 'completed' || updatedPayment.status === 'confirmed') {
+    if (updatedPayment.status === 'confirmed') {
       setCurrentPayment(updatedPayment)
       setState('success')
       if (onPaymentComplete) {
@@ -101,6 +101,7 @@ export const PaymentWidget: React.FC<PaymentWidgetProps> = ({
           >
             <PaymentStatus
               paymentId={currentPayment.id}
+              recipientWallet={merchantWallet}
               onStatusChange={handleStatusChange}
             />
           </motion.div>

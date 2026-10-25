@@ -9,7 +9,7 @@ import { Spinner } from '@/components/Common/Spinner'
 import { useApi } from '@/hooks/useApi'
 import { useMerchant } from '@/hooks/useMerchant'
 import { formatters } from '@/utils/formatting'
-import { PaymentListResponse, Payment } from '@/types'
+import { PaymentListResponse, Payment } from '@blew/types'
 
 export interface RecentPaymentsProps {
   title?: string
@@ -55,13 +55,14 @@ export const RecentPayments: React.FC<RecentPaymentsProps> = ({
 
   const getStatusVariant = (status: Payment['status']) => {
     switch (status) {
-      case 'completed':
       case 'confirmed':
         return 'success'
       case 'pending':
         return 'info'
       case 'failed':
         return 'error'
+      case 'expired':
+        return 'warning'
       default:
         return 'default'
     }

@@ -7,7 +7,7 @@ import { Button } from '@/components/Common/Button'
 import { Spinner } from '@/components/Common/Spinner'
 import { useApi } from '@/hooks/useApi'
 import { useMerchant } from '@/hooks/useMerchant'
-import { DashboardChartResponse } from '@/types'
+import { DashboardChartResponse } from '@blew/types'
 
 type TimeRange = '7days' | '30days' | '90days'
 
@@ -29,9 +29,9 @@ export const PaymentChart: React.FC<PaymentChartProps> = ({ title = 'Payment Vol
           apiKey: apiKey || undefined,
         })
 
-        const data = response.labels.map((label, index) => ({
-          name: label,
-          value: response.values[index] || 0,
+        const data = response.data.map((item) => ({
+          name: item.date,
+          value: item.volume,
         }))
 
         setChartData(data)

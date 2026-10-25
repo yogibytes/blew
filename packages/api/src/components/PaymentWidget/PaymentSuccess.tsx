@@ -1,10 +1,10 @@
-'use client'
+﻿'use client'
 
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/Common/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/Common/Card'
 import { formatters } from '@/utils/formatting'
-import { Payment } from '@/types'
+import { Payment } from '@blew/types'
 
 export interface PaymentSuccessProps {
   payment: Payment

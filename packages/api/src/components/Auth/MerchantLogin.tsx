@@ -8,7 +8,7 @@ import { showSuccess, showError } from '@/components/Common/Toast'
 import { useApi } from '@/hooks/useApi'
 import { useMerchant } from '@/hooks/useMerchant'
 import { validators } from '@/utils/validation'
-import { LoginResponse } from '@/types'
+import { LoginResponse } from '@blew/types'
 
 export interface MerchantLoginProps {
   onSuccess?: () => void
@@ -45,8 +45,9 @@ export const MerchantLogin: React.FC<MerchantLoginProps> = ({ onSuccess }) => {
         walletAddress: response.walletAddress,
         totalVolume: response.totalVolume || 0,
         transactionCount: response.transactionCount || 0,
-        successRate: 100,
-        createdAt: new Date().toISOString(),
+        status: 'active',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       })
 
       showSuccess('Logged in successfully!', `Welcome back, ${response.name}`)

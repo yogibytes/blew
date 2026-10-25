@@ -43,6 +43,7 @@ async function handlePost(request: NextRequest) {
       where: { apiKey: api },
       select: { id: true, walletAddress: true },
     })
+    console.log(merchant);
     if (!merchant) {
       return NextResponse.json({ error: 'Merchant not found' }, { status: 404 })
     }

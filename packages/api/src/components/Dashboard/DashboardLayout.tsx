@@ -9,7 +9,7 @@ import { Spinner } from '@/components/Common/Spinner'
 import { useApi } from '@/hooks/useApi'
 import { useMerchant } from '@/hooks/useMerchant'
 import { formatters } from '@/utils/formatting'
-import { DashboardStats } from '@/types'
+import { DashboardStats } from '@blew/types'
 
 export interface DashboardLayoutProps {
   onLogout?: () => void
@@ -47,7 +47,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ onLogout }) =>
       {/* Header */}
       <div className="flex items-center justify-between animate-float-in">
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
             Dashboard
           </h1>
           {merchant && (
@@ -65,7 +65,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ onLogout }) =>
           value={
             loading || !stats
               ? '-'
-              : formatters.formatUSD(stats.volume)
+              : formatters.formatUSD(stats.totalVolume)
           }
           unit={loading || !stats ? '' : 'USD'}
           loading={loading}
@@ -83,7 +83,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ onLogout }) =>
 
         <StatsCard
           title="Transactions"
-          value={loading || !stats ? '-' : stats.transactions}
+          value={loading || !stats ? '-' : stats.totalTransactions}
           loading={loading}
           variant="success"
           icon={
@@ -128,8 +128,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ onLogout }) =>
             loading || !stats
               ? '-'
               : formatters.formatUSD(
-                  stats.transactions > 0
-                    ? stats.volume / stats.transactions
+                  stats.totalTransactions > 0
+                    ? stats.totalVolume / stats.totalTransactions
                     : 0
                 )
           }

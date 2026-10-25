@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { Payment, Token } from '@types'
+import { Payment, Token } from '@blew/types'
 
 interface PaymentState {
   payment: Payment | null

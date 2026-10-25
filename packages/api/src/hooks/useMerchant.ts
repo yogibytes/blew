@@ -1,8 +1,8 @@
-'use client'
+﻿'use client'
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Merchant } from '@/types'
+import { Merchant } from '@blew/types'
 
 interface MerchantState {
   merchant: Merchant | null

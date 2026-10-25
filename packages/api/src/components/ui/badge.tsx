@@ -46,11 +46,12 @@ function Badge({ className, variant, asChild = false, text, children, ...props }
           ? 'destructive'
           : variant
   const content = text ?? children
+  const variantProp = resolvedVariant as VariantProps<typeof badgeVariants>['variant']
 
   return (
     <Comp
       data-slot="badge"
-      className={cn(badgeVariants({ variant: resolvedVariant }), className)}
+      className={cn(badgeVariants({ variant: variantProp }), className)}
       {...props}
     >
       {content}
