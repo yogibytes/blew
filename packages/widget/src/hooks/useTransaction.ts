@@ -11,7 +11,7 @@ export interface UseTransactionReturn {
 }
 export const useTransaction = () => {
   const { connection } = useConnection()
-  const { publicKey, sendTransaction } = useWallet()
+  const { publicKey, sendTransaction } = useWallet();
 
   const [signature, setSignature] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState(false)

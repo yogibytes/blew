@@ -107,6 +107,69 @@ export interface ErrorResponse {
   details?: Record<string, any>
 }
 
+// Additional API Response Types
+export interface LoginResponse {
+  id: string
+  email: string
+  name: string
+  walletAddress: string
+  totalVolume: number
+  transactionCount: number
+}
+
+export interface RegisterRequest {
+  email: string
+  name: string
+  walletAddress: string
+  webhookUrl?: string
+}
+
+export interface RegisterResponse {
+  merchant: Merchant
+  apiKey: string
+}
+
+export interface PaymentRequest {
+  amount: number
+  token: Token
+  currency?: string
+  metadata?: Record<string, any>
+}
+
+export interface PaymentListResponse {
+  payments: Payment[]
+  total: number
+  limit: number
+  offset: number
+}
+
+export interface DashboardStats {
+  totalVolume: number
+  totalTransactions: number
+  averageTransaction: number
+  pendingPayments: number
+  failedPayments: number
+  successRate: number
+  todayVolume: number
+  todayTransactions: number
+}
+
+export interface DashboardChartResponse {
+  data: Array<{
+    date: string
+    volume: number
+    transactions: number
+  }>
+}
+
+export interface ApiError {
+  message: string
+  code?: string
+  details?: any
+}
+
+export type Token = 'SOL' | 'USDC'
+
 // Status types
 export type PaymentStatus = 'pending' | 'confirmed' | 'failed' | 'expired'
 export type WebhookStatus = 'pending' | 'delivered' | 'failed'
