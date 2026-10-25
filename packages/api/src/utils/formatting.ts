@@ -1,7 +1,7 @@
 // Formatting utilities for numbers, dates, and addresses
 
 export const formatters = {
-  formatCurrency(value: number, token: 'SOL' | 'USDC' = 'SOL', decimals = 4): string {
+  formatCurrency(value: number, token: string = 'SOL', decimals = 4): string {
     return `${value.toFixed(decimals)} ${token}`
   },
 

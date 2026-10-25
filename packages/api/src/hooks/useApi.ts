@@ -1,8 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useState, useCallback } from 'react'
 import { apiClient } from '@/utils/api'
-import { ApiError } from '@/types'
+import { ApiError } from '@blew/types'
 
 interface UseApiState<T> {
   data: T | null

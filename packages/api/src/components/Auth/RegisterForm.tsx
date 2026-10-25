@@ -9,7 +9,7 @@ import { showSuccess, showError } from '@/components/Common/Toast'
 import { useApi } from '@/hooks/useApi'
 import { useMerchant } from '@/hooks/useMerchant'
 import { validators } from '@/utils/validation'
-import { RegisterRequest, RegisterResponse } from '@/types'
+import { RegisterRequest, RegisterResponse } from '@blew/types'
 
 export interface RegisterFormProps {
   onSuccess?: () => void
@@ -68,15 +68,18 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
       
       // Store merchant info
       setMerchant({
-        id: response.id,
-        email: response.email,
-        name: response.name,
+        id: response.merchant.id,
+        email: response.merchant.email,
+        name: response.merchant.name,
         apiKey: response.apiKey,
-        walletAddress: formData.walletAddress,
-        totalVolume: 0,
-        transactionCount: 0,
-        successRate: 100,
-        createdAt: new Date().toISOString(),
+        walletAddress: response.merchant.walletAddress,
+        webhookUrl: response.merchant.webhookUrl,
+        webhookSecret: response.merchant.webhookSecret,
+        status: response.merchant.status,
+        totalVolume: response.merchant.totalVolume,
+        transactionCount: response.merchant.transactionCount,
+        createdAt: response.merchant.createdAt,
+        updatedAt: response.merchant.updatedAt,
       })
 
       showSuccess('Account created successfully!', 'Save your API key')

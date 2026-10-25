@@ -8,14 +8,19 @@ import { Spinner } from '@/components/Common/Spinner'
 import { useApi } from '@/hooks/useApi'
 import { useMerchant } from '@/hooks/useMerchant'
 import { formatters } from '@/utils/formatting'
-import { Payment } from '@/types'
+import { Payment } from '@blew/types'
 
 export interface PaymentStatusProps {
   paymentId: string
+  recipientWallet?: string
   onStatusChange?: (payment: Payment) => void
 }
 
-export const PaymentStatus: React.FC<PaymentStatusProps> = ({ paymentId, onStatusChange }) => {
+export const PaymentStatus: React.FC<PaymentStatusProps> = ({
+  paymentId,
+  recipientWallet,
+  onStatusChange,
+}) => {
   const [payment, setPayment] = useState<Payment | null>(null)
   const [timeLeft, setTimeLeft] = useState<number>(900) // 15 minutes in seconds
   const { execute, loading } = useApi<Payment>()
@@ -28,7 +33,7 @@ export const PaymentStatus: React.FC<PaymentStatusProps> = ({ paymentId, onStatu
       try {
         const data = await execute(`/api/payments/${paymentId}`, {
           method: 'GET',
-          apiKey,
+          apiKey: apiKey ?? undefined,
         })
         setPayment(data)
 
@@ -88,15 +93,15 @@ export const PaymentStatus: React.FC<PaymentStatusProps> = ({ paymentId, onStatu
   const statusVariant = {
     pending: 'info',
     confirmed: 'success',
-    completed: 'success',
     failed: 'error',
-  }[payment.status] as 'info' | 'success' | 'error'
+    expired: 'warning',
+  }[payment.status] as 'info' | 'success' | 'error' | 'warning'
 
   const statusLabel = {
     pending: 'Pending',
     confirmed: 'Confirmed',
-    completed: 'Completed',
     failed: 'Failed',
+    expired: 'Expired',
   }[payment.status]
 
   return (
@@ -123,12 +128,14 @@ export const PaymentStatus: React.FC<PaymentStatusProps> = ({ paymentId, onStatu
             </span>
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Recipient</span>
-            <span className="font-mono text-sm text-gray-900 dark:text-white">
-              {formatters.shortenAddress(payment.recipientWallet)}
-            </span>
-          </div>
+          {recipientWallet && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Recipient</span>
+              <span className="font-mono text-sm text-gray-900 dark:text-white">
+                {formatters.shortenAddress(recipientWallet)}
+              </span>
+            </div>
+          )}
 
           {payment.solanaSignature && (
             <div className="flex items-center justify-between">

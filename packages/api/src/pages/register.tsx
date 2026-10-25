@@ -65,10 +65,11 @@ export default function RegisterPage() {
           apiKey: data.data.apiKey,
           walletAddress: data.data.walletAddress,
           webhookSecret: data.data.webhookSecret,
+          status: data.data.status,
           totalVolume: 0,
           transactionCount: 0,
-          successRate: 0,
-          createdAt: data.data.createdAt,
+          createdAt: new Date(data.data.createdAt),
+          updatedAt: new Date(data.data.createdAt),
         })
       }
     } catch (err) {

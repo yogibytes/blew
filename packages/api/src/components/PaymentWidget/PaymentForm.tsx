@@ -11,7 +11,7 @@ import { usePayment } from '@/hooks/usePayment'
 import { useMerchant } from '@/hooks/useMerchant'
 import { validators } from '@/utils/validation'
 import { formatters } from '@/utils/formatting'
-import { Payment, Token, PaymentRequest } from '@/types'
+import { Payment, Token, PaymentRequest } from '@blew/types'
 
 export interface PaymentFormProps {
   merchantName?: string
@@ -59,7 +59,6 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
       const payload: PaymentRequest = {
         amount: parseFloat(amount),
         token,
-        recipientWallet: merchantWallet,
         metadata: {
           timestamp: new Date().toISOString(),
         },
